@@ -4,9 +4,9 @@ import { ArrowLeft, Eye, EyeClosed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import img from "../../shared/images/Group 1116606595 (1).svg";
 import { useTranslation } from "react-i18next";
-
+import { useTheme } from "next-themes";
 const ResetPassword = () => {
-    const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
@@ -35,6 +35,8 @@ const ResetPassword = () => {
     console.log("Reset password data:", data);
   };
 
+  const { theme, setTheme } = useTheme();
+
   return (
     <div className="lg:flex w-full h-[130vh] lg:h-[120vh] fixed -top-10 -left-0">
       <div className="lg:pt-0 pt-10 w-full lg:w-1/2 h-1/5 lg:h-full bg-[#1C2536] flex items-center justify-center">
@@ -46,11 +48,27 @@ const ResetPassword = () => {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 h-2/3 lg:h-full flex lg:pt-0 pt-50 lg:items-center justify-center bg-white">
+      <div
+        className={`w-full lg:w-1/2 h-2/3 lg:h-full flex lg:pt-0 pt-30 lg:items-center justify-center  ${
+          theme == "dark" ? "bg-black" : "bg-white"
+        }`}
+      >
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 w-3/5 relative"
         >
+          <div>
+            <Link to={"/login"} className="flex items-center gap-2">
+              <ArrowLeft />
+              <h1 className="text-[18px] text-[#3b5e9a] font-medium">
+                {t("forgotPassword.backToLogin")}
+              </h1>
+            </Link>
+          </div>
+          <label className="text-2xl text-[#3b5e9a] font-bold">
+            {t("forgotPassword.title")}
+          </label>
+
           <input
             type="text"
             name="username"

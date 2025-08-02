@@ -39,7 +39,7 @@ const Layout = () => {
 
   let [account, setAccount] = useState(false);
   function btnAccount() {
-    setAccount(!account);
+    setAccount((e) => !e);
   }
   async function logOut() {
     localStorage.removeItem("admin_token");
@@ -85,7 +85,7 @@ const Layout = () => {
           className="btn btn-sm"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
-          {theme === "dark" ? <Sun/> : <Moon/>}
+          {theme === "dark" ? <Sun /> : <Moon />}
         </button>
 
         <div className="flex items-center gap-3">

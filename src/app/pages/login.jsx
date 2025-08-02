@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import img from "../../shared/images/Group 1116606595 (1).svg";
 import { useLoginMutation } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 
 const Login = () => {
   const { t, i18n } = useTranslation();
-
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [btnShow, setbtnShow] = useState(false);
 
@@ -55,12 +56,16 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 h-2/3 lg:h-full flex lg:pt-0 pt-30 lg:items-center justify-center bg-white">
+      <div
+        className={`w-full lg:w-1/2 h-2/3 lg:h-full flex lg:pt-0 pt-30 lg:items-center justify-center  ${
+          theme == "dark" ? "bg-black" : "bg-white"
+        }`}
+      >
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 w-3/5 relative"
         >
-          <label className="text-2xl text-[#111927] font-bold">
+          <label className="text-2xl text-[#3b5e9a] font-bold">
             {t("login.title")}
           </label>
 

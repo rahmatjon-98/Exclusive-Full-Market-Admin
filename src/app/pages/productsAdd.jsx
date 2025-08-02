@@ -27,6 +27,7 @@ import {
   useGetSubCategoriesQuery,
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 
 const ProductsAdd = () => {
   const { t } = useTranslation();
@@ -190,9 +191,7 @@ const ProductsAdd = () => {
                   <p className="py-2">{t("productsAdd.9")}</p>
                   <select
                     {...register("BrandId", { required: true })}
-                    className={`border border-[#E5E5E5] p-2  rounded w-full  ${
-                      theme == "dark" ? "bg-black" : "bg-white"
-                    }`}
+                    className={`border border-[#E5E5E5] p-2  rounded w-full  ${theme == "dark" ? "bg-black" : "bg-white"}`}
                   >
                     <option value="">{t("productsAdd.10")}</option>
                     {dataBrands &&
