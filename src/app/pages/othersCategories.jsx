@@ -9,10 +9,16 @@ import {
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
+
 const OthersCategories = () => {
   const { t } = useTranslation();
 
-  let { data: dataCategory, refetch: refetchCategory } = useGetCategoryQuery();
+  let {
+    data: dataCategory,
+    refetch: refetchCategory,
+    isLoading,
+  } = useGetCategoryQuery();
 
   let [addCategory] = useAddCategoryMutation();
   let [editCategory] = useEditCategoryMutation();
@@ -72,26 +78,32 @@ const OthersCategories = () => {
 
   let [search, setSearch] = useState("");
   const { theme, setTheme } = useTheme();
+  // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="flex items-start">
       <div className="p-2 lg:p-6 overflow-y-scroll h-[88vh] w-full">
         <div className="flex gap-1 justify-between items-center lg:text-xl text-xs">
           <div className="flex items-center gap-1 lg:gap-5">
             <Link to={"/others"}>
-              <button className="font-medium">{t("categories.brands")}</button>
+              <button className="cursor-pointer font-medium">
+                {t("categories.brands")}
+              </button>
             </Link>
             <Link to={"/othersCategories"}>
-              <button className="font-medium border-b-4 border-gray-300 py-2">
+              <button className="cursor-pointer font-medium border-b-4 border-gray-300 py-2">
                 {t("categories.categories")}
               </button>
             </Link>
             <Link to={"/othersSubCategories"}>
-              <button className="font-medium">
+              <button className="cursor-pointer font-medium">
                 {t("categories.subcategories")}
               </button>
             </Link>
             <Link to={"/othersColors"}>
-              <button className="font-medium">{t("categories.colors")}</button>
+              <button className="cursor-pointer font-medium">
+                {t("categories.colors")}
+              </button>
             </Link>
           </div>
 
@@ -214,37 +226,48 @@ const OthersCategories = () => {
           </fieldset>
         </div>
 
-        <article className="grid lg:grid-cols-5 gap-5">
-          {dataCategory &&
-            dataCategory.data
-              .filter((e) =>
-                e.categoryName.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((e, i) => (
-                <div
-                  key={i}
-                  className="flex items-start justify-between p-5 border border-gray-400 rounded"
-                >
-                  <div className="flex flex-col justify-between w-9/10">
-                    <img
-                      className="w-20 h-20 object-cover"
-                      src={`https://store-api.softclub.tj/images/${e.categoryImage}`}
-                      alt=""
-                    />
-                    <p>{e.categoryName}</p>
-                  </div>
+        {isLoading ? (
+          <Skeleton active />
+        ) : (
+          <article
+            className={`${dataCategory ? "grid" : ""}  lg:grid-cols-5 gap-5`}
+          >
+            {dataCategory ? (
+              dataCategory.data
+                .filter((e) =>
+                  e.categoryName.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((e, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start justify-between p-5 border border-gray-400 rounded"
+                  >
+                    <div className="flex flex-col justify-between w-9/10">
+                      <img
+                        className="w-20 h-20 object-cover"
+                        src={`https://store-api.softclub.tj/images/${e.categoryImage}`}
+                        alt=""
+                      />
+                      <p>{e.categoryName}</p>
+                    </div>
 
-                  <div className="space-y-5 w-1/10">
-                    <button onClick={() => openEditModal(e)}>
-                      <SquarePen size={18} color="blue" />
-                    </button>
-                    <button onClick={() => removeCategory(e.id)}>
-                      <Trash size={18} color="red" />
-                    </button>
+                    <div className="space-y-5 w-1/10">
+                      <button onClick={() => openEditModal(e)}>
+                        <SquarePen size={18} color="blue" />
+                      </button>
+                      <button onClick={() => removeCategory(e.id)}>
+                        <Trash size={18} color="red" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-        </article>
+                ))
+            ) : (
+              <div className="w-full text-center text-red-600 lg:text-2xl font-medium">
+                {t("layout.7")}
+              </div>
+            )}
+          </article>
+        )}
       </div>
     </div>
   );

@@ -3,15 +3,17 @@ import { Link, useNavigate } from "react-router";
 import { Eye, EyeClosed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import img from "../../shared/images/Group 1116606595 (1).svg";
-import { useLoginMutation } from "../../entities/allApi";
+import { useGetUserDataQuery, useLoginMutation } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 
 const Login = () => {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [btnShow, setbtnShow] = useState(false);
+  // const { data, isLoading } = useGetUserDataQuery();
 
   const token = localStorage.getItem("admin_token");
   useEffect(() => {
@@ -44,7 +46,7 @@ const Login = () => {
       alert(t("login.error"));
     }
   };
-
+  // if (isLoading) return <Skeleton active />;
   return (
     <div className="lg:flex w-full h-[130vh] lg:h-[120vh] fixed -top-10 -left-0">
       <div className="lg:pt-0 pt-10 w-full lg:w-1/2 h-1/5 lg:h-full bg-[#1C2536] flex items-center justify-center">
@@ -70,7 +72,9 @@ const Login = () => {
           </label>
 
           <input
-            className={`border border-[#E5E5E5] rounded w-full p-2.5 outline-none ${theme == "light" ? "text-black" : "text-white"}`}
+            className={`border border-[#E5E5E5] rounded w-full p-2.5 outline-none ${
+              theme == "light" ? "text-black" : "text-white"
+            }`}
             type="text"
             placeholder={t("login.usernamePlaceholder")}
             // autoComplete="email"
@@ -83,7 +87,11 @@ const Login = () => {
             <p className="text-red-500 text-sm">{t("login.usernameError")}</p>
           )}
 
-          <div className={`border border-[#E5E5E5] rounded w-full relative ${theme == "light" ? "text-black" : "text-white"}`}>
+          <div
+            className={`border border-[#E5E5E5] rounded w-full relative ${
+              theme == "light" ? "text-black" : "text-white"
+            }`}
+          >
             <input
               className="p-2.5 outline-none w-9/10"
               type={btnShow ? "text" : "password"}

@@ -13,7 +13,7 @@ const Orders = () => {
       <div className="p-2 lg:p-6 overflow-y-scroll w-full h-[91vh] lg:h-[88vh]">
         <div className="flex justify-between items-center mb-4">
           <h1 className="lg:text-2xl font-bold">{t("orders.1")}</h1>
-          <button className="bg-blue-600 text-white px-2 lg:px-8 py-2 rounded text-xs ">
+          <button className="cursor-pointer bg-blue-600 text-white px-2 lg:px-8 py-2 rounded text-xs ">
             {t("orders.2")}
           </button>
         </div>

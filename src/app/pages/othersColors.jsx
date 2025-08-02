@@ -9,10 +9,15 @@ import {
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 const othersColors = () => {
   const { t } = useTranslation();
 
-  let { data: dataColors, refetch: refetchColor } = useGetColorsQuery();
+  let {
+    data: dataColors,
+    refetch: refetchColor,
+    isLoading,
+  } = useGetColorsQuery();
   let [addColor] = useAddColorMutation();
   let [editColor] = useEditColorMutation();
   let [deleteColor] = useDeleteColorMutation();
@@ -62,21 +67,30 @@ const othersColors = () => {
   let [search, setSearch] = useState("");
   const [selectedColorId, setSelectedColorId] = useState(1);
   const { theme, setTheme } = useTheme();
+
+  // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="p-2 lg:p-6 overflow-y-scroll h-[88vh] w-full">
       <div className="flex justify-between items-center lg:text-xl text-xs">
         <div className="flex items-center gap-1 lg:gap-5">
           <Link to={"/others"}>
-            <button className="font-medium">{t("colors.brands")}</button>
+            <button className="cursor-pointer font-medium">
+              {t("colors.brands")}
+            </button>
           </Link>
           <Link to={"/othersCategories"}>
-            <button className="font-medium">{t("colors.categories")}</button>
+            <button className="cursor-pointer font-medium">
+              {t("colors.categories")}
+            </button>
           </Link>
           <Link to={"/othersSubCategories"}>
-            <button className="font-medium">{t("colors.subcategories")}</button>
+            <button className="cursor-pointer font-medium">
+              {t("colors.subcategories")}
+            </button>
           </Link>
           <Link to={"/othersColors"}>
-            <button className="font-medium border-b-4 border-gray-300 py-2">
+            <button className="cursor-pointer font-medium border-b-4 border-gray-300 py-2">
               {t("colors.colors")}
             </button>
           </Link>
@@ -188,39 +202,48 @@ const othersColors = () => {
         </fieldset>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 mb-2">
-        {dataColors &&
-          dataColors.data
-            ?.filter((e) =>
-              e.colorName.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((e, i) => (
-              <div
-                key={i}
-                className="border border-gray-300 rounded p-2.5 flex justify-between"
-              >
-                <div>
-                  <p className="font-bold uppercase text-[18px] mb-3">
-                    {e.colorName}
-                  </p>
+      {isLoading ? (
+        <Skeleton active />
+      ) : (
+        <div className={`${dataColors ? "grid" : ""}  grid-cols-2 lg:grid-cols-5 gap-2 mb-2`}>
+          {dataColors ? (
+            dataColors.data
+              ?.filter((e) =>
+                e.colorName.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((e, i) => (
+                <div
+                  key={i}
+                  className="border border-gray-300 rounded p-2.5 flex justify-between"
+                >
+                  <div>
+                    <p className="font-bold uppercase text-[18px] mb-3">
+                      {e.colorName}
+                    </p>
 
-                  <div
-                    style={{ backgroundColor: e.colorName }}
-                    className={`w-10 h-10 rounded-full border border-[rgb(183,183,183)]`}
-                  ></div>
-                </div>
+                    <div
+                      style={{ backgroundColor: e.colorName }}
+                      className={`w-10 h-10 rounded-full border border-[rgb(183,183,183)]`}
+                    ></div>
+                  </div>
 
-                <div className="space-x-3 flex flex-col justify-center gap-5">
-                  <button onClick={() => openEditModal(e)}>
-                    <SquarePen size={18} color="blue" />
-                  </button>
-                  <button onClick={() => removeColor(e.id)}>
-                    <Trash size={18} color="red" />
-                  </button>
+                  <div className="space-x-3 flex flex-col justify-center gap-5">
+                    <button onClick={() => openEditModal(e)}>
+                      <SquarePen size={18} color="blue" />
+                    </button>
+                    <button onClick={() => removeColor(e.id)}>
+                      <Trash size={18} color="red" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-      </div>
+              ))
+          ) : (
+            <div className="w-full text-center text-red-600 lg:text-2xl font-medium">
+              {t("layout.7")}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

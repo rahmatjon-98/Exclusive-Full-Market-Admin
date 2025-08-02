@@ -22,6 +22,7 @@ import gb from "../../shared/images/gb.svg";
 import ru from "../../shared/images/ru.svg";
 import tj from "../../shared/images/tj.svg";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 
 const Layout = () => {
   const { t, i18n } = useTranslation();
@@ -33,7 +34,7 @@ const Layout = () => {
   const { theme, setTheme } = useTheme();
 
   let userId = useUserId();
-  let { data } = useGetUserDataQuery(userId);
+  const { data, isLoading, isError } = useGetUserDataQuery(userId);
 
   const navigate = useNavigate();
 
@@ -49,6 +50,12 @@ const Layout = () => {
 
   let [ImageFull, setImageFull] = useState(false);
   let [dashboard, setdashboard] = useState(true);
+
+  const [active, setActive] = useState(false);
+  const [size, setSize] = useState("default");
+  const [block, setBlock] = useState(false);
+  const [avatarShape, setAvatarShape] = useState("circle");
+
   return (
     <div className=" w-full">
       {ImageFull && (
@@ -81,31 +88,43 @@ const Layout = () => {
           />
         </div>
 
-        <button
-          className="btn btn-sm"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        >
-          {theme === "dark" ? <Sun /> : <Moon />}
-        </button>
-
         <div className="flex items-center gap-3">
-          <div className="relative lg:mr-5">
-            <div className="flex items-center justify-center text-[12px] bg-[#1E5EFF] rounded-full w-4 h-4 p-1 absolute ml-3 -mt-1">
-              0
-            </div>
-            <Bell />
-          </div>
+          <button
+            className="btn btn-sm"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun /> : <Moon />}
+          </button>
 
-          <div className="rounded-full w-8 h-8 flex items-center justify-center bg-[#1FD286] font-semibold">
-            {data && data.data.image ? (
-              <img
-                src={`https://store-api.softclub.tj/images/${data?.data.image}`}
-                alt="img"
-                onClick={() => setImageFull((e) => !e)}
-                className="w-full h-full rounded-full object-cover"
+          {/* <div className="relative lg:mr-5">
+              <div className="flex items-center justify-center text-[12px] bg-[#1E5EFF] rounded-full w-4 h-4 p-1 absolute ml-3 -mt-1">
+                0
+              </div>
+              <Bell />
+            </div> */}
+
+          <div className="w-8 h-8">
+            {isLoading ? (
+              <Skeleton.Avatar
+                active
+                size={size}
+                shape={avatarShape}
+                className=" rounded-full bg-[rgba(255,255,255,0.5)]"
               />
             ) : (
-              <div>{data?.data.userName.at(0)}</div>
+              <div className="rounded-full w-8 h-8 flex items-center justify-center bg-[#1FD286] font-semibold text-white overflow-hidden">
+                {data?.data.image ? (
+                  <img
+                    loading="lazy"
+                    src={`https://store-api.softclub.tj/images/${data?.data.image}`}
+                    alt="img"
+                    onClick={() => setImageFull((e) => !e)}
+                    className="w-full h-full rounded-full object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div>{data?.data.userName?.at(0) ?? "?"}</div>
+                )}
+              </div>
             )}
           </div>
 
@@ -113,7 +132,19 @@ const Layout = () => {
             onClick={() => setAccount((e) => !e)}
             className="flex items-center gap-3 relative cursor-pointer"
           >
-            <p className="lg:block hidden">{data?.data.userName}</p>
+            {isLoading ? (
+              <div className="lg:block hidden">
+                <Skeleton.Input
+                  active
+                  size={size}
+                  block={block}
+                  className="rounded bg-[rgba(255,255,255,0.5)]"
+                />
+              </div>
+            ) : (
+              <p className="lg:block hidden">{data?.data.userName}</p>
+            )}
+
             <button>
               <ChevronDown />
             </button>

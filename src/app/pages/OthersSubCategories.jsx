@@ -10,10 +10,16 @@ import {
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
+
 const OthersCategories = () => {
   const { t } = useTranslation();
 
-  let { data: dataCategory, refetch: refetchCategory } = useGetCategoryQuery();
+  let {
+    data: dataCategory,
+    refetch: refetchCategory,
+    isLoading,
+  } = useGetCategoryQuery();
   let { data: dataSubCategories, refetch: refetchSubCategories } =
     useGetSubCategoriesQuery();
 
@@ -86,28 +92,30 @@ const OthersCategories = () => {
     }))
   );
 
+  // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="flex items-start">
       <div className="p-2 lg:p-6 overflow-y-scroll h-[88vh] w-full">
         <div className="flex justify-between items-center lg:text-xl text-xs">
           <div className="flex items-center gap-1 lg:gap-5">
             <Link to={"/others"}>
-              <button className="font-medium">
+              <button className="cursor-pointer font-medium">
                 {t("subcategories.brands")}
               </button>
             </Link>
             <Link to={"/othersCategories"}>
-              <button className="font-medium">
+              <button className="cursor-pointer font-medium">
                 {t("subcategories.categories")}
               </button>
             </Link>
             <Link to={"/othersSubCategories"}>
-              <button className="font-medium border-b-4 border-gray-300 py-2">
+              <button className="cursor-pointer font-medium border-b-4 border-gray-300 py-2">
                 {t("subcategories.subcategories")}
               </button>
             </Link>
             <Link to={"/othersColors"}>
-              <button className="font-medium">
+              <button className="cursor-pointer font-medium">
                 {t("subcategories.colors")}
               </button>
             </Link>
@@ -115,7 +123,7 @@ const OthersCategories = () => {
 
           <button
             onClick={() => setaddModal(true)}
-            className="bg-blue-600 text-white px-2 lg:px-8 py-0.5 lg:py-2 rounded text-[10px] lg:text-xs"
+            className="cursor-pointer bg-blue-600 text-white px-2 lg:px-8 py-0.5 lg:py-2 rounded text-[10px] lg:text-xs"
           >
             {t("subcategories.addNew")}
           </button>
@@ -142,7 +150,9 @@ const OthersCategories = () => {
               <select
                 value={categoryId ?? ""}
                 onChange={(e) => setcategoryId(e.target.value)}
-                className="border border-[#E5E5E5] p-2 rounded w-full"
+                className={`border border-[#E5E5E5] w-full p-2 rounded w-fulloutline-none   ${
+                  theme == "dark" ? "bg-black" : "bg-white"
+                }`}
               >
                 <option value="" disabled>
                   {t("subcategories.selectCategory")}
@@ -165,13 +175,13 @@ const OthersCategories = () => {
               <div className="flex gap-3 justify-between text-xs">
                 <button
                   onClick={() => setaddModal(false)}
-                  className="border border-[#E2E8F0] text-blue-600 px-8 py-2 rounded"
+                  className="cursor-pointer border border-[#E2E8F0] text-blue-600 px-8 py-2 rounded"
                 >
                   {t("subcategories.cancel")}
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-8 py-2 rounded "
+                  className="cursor-pointer bg-blue-600 text-white px-8 py-2 rounded "
                 >
                   {t("subcategories.save")}
                 </button>
@@ -201,7 +211,9 @@ const OthersCategories = () => {
               <select
                 value={categoryId ?? ""}
                 onChange={(e) => setcategoryId(e.target.value)}
-                className="border border-[#E5E5E5] p-2 rounded w-full"
+                className={`border border-[#E5E5E5] w-full p-2 rounded w-fulloutline-none   ${
+                  theme == "dark" ? "bg-black" : "bg-white"
+                }`}
               >
                 <option value="" disabled>
                   {t("subcategories.selectCategory")}
@@ -223,14 +235,14 @@ const OthersCategories = () => {
 
               <div className="flex gap-3 justify-between text-xs">
                 <button
+                  className="cursor-pointer border border-[#E2E8F0] text-blue-600 px-8 py-2 rounded"
                   onClick={() => seteditModal(false)}
-                  className="border border-[#E2E8F0] text-blue-600 px-8 py-2 rounded"
                 >
                   {t("subcategories.cancel")}
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-8 py-2 rounded "
+                  className="bg-blue-600 text-white px-8 py-2 rounded cursor-pointer "
                 >
                   {t("subcategories.save")}
                 </button>
@@ -255,39 +267,62 @@ const OthersCategories = () => {
           </fieldset>
         </div>
 
-        <article className="grid lg:grid-cols-5 gap-5">
-          {flatSubCategories
-            ?.filter((e) =>
-              e.subCategoryName.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((e, i) => (
-              <div
-                key={i}
-                className="flex gap-2 justify-between p-5 border border-gray-400 rounded"
-              >
-                <div className="space-y-3 w-9/10">
-                  <p className="text-sm text-gray-500">
-                    {t("subcategories.categoryLabel")}: {e.categoryName}
-                  </p>
-                  <p className="font-semibold">
-                    <span className="font-normal text-xs">
-                      {t("subcategories.subCategoryLabel")}:
-                    </span>{" "}
-                    {e.subCategoryName}
-                  </p>
-                </div>
+        {isLoading ? (
+          <Skeleton active />
+        ) : (
+          <article
+            className={`${
+              flatSubCategories ? "grid" : ""
+            }  lg:grid-cols-5 gap-5`}
+          >
+            {flatSubCategories ? (
+              flatSubCategories
+                .filter((e) =>
+                  e.subCategoryName.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((e, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-2 justify-between p-5 border border-gray-400 rounded"
+                  >
+                    <div className="space-y-3 w-9/10">
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          {t("subcategories.categoryLabel")}:
+                        </p>
+                        <p className="font-medium">{e.categoryName}</p>
+                      </div>
+                      <div className="font-semibold">
+                        <p className="font-normal text-xs">
+                          {t("subcategories.subCategoryLabel")}:
+                        </p>
+                        <p className="font-medium">{e.subCategoryName}</p>
+                      </div>
+                    </div>
 
-                <div className="space-y-5 w-1/10">
-                  <button onClick={() => openEditModal(e)}>
-                    <SquarePen size={18} color="blue" />
-                  </button>
-                  <button onClick={() => removeSubCategories(e.id)}>
-                    <Trash size={18} color="red" />
-                  </button>
-                </div>
+                    <div className="space-y-5 w-1/10">
+                      <button
+                        className="cursor-pointer "
+                        onClick={() => openEditModal(e)}
+                      >
+                        <SquarePen size={18} color="blue" />
+                      </button>
+                      <button
+                        className="cursor-pointer "
+                        onClick={() => removeSubCategories(e.id)}
+                      >
+                        <Trash size={18} color="red" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div className="w-full text-center text-red-600 lg:text-2xl font-medium">
+                {t("layout.7")}
               </div>
-            ))}
-        </article>
+            )}
+          </article>
+        )}
       </div>
     </div>
   );

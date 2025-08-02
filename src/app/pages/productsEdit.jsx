@@ -1,14 +1,5 @@
-import {
-  ArrowLeft,
-  Check,
-  Eye,
-  LogOut,
-  Search,
-  SquarePen,
-  Trash,
-  X,
-} from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Eye, Trash } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 
 import img from "../../shared/images/Button → SVG.svg";
@@ -18,7 +9,6 @@ import img3 from "../../shared/images/Button → SVG (3).svg";
 import img4 from "../../shared/images/Button → SVG (4).svg";
 import img5 from "../../shared/images/Button → SVG (5).svg";
 import img6 from "../../shared/images/Button → SVG (6).svg";
-import img7 from "../../shared/images/div.MuiBox-root.png";
 import { useForm } from "react-hook-form";
 import {
   useAddImageToProductMutation,
@@ -32,17 +22,32 @@ import {
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 
 const ProductsEdit = () => {
   const { t } = useTranslation();
 
   const { id } = useParams();
-  const { data: productById, refetch: refetchImage } =
-    useGetByIdProductQuery(id);
+  const {
+    data: productById,
+    refetch: refetchImage,
+    isLoading,
+  } = useGetByIdProductQuery(id);
+  let { data: dataBrands, refetch: refetchBrands } = useGetBrandsQuery();
+
+  const [selectedColorId, setSelectedColorId] = useState(null);
+  const [selectedBrandId, setSelectedBrandId] = useState(null);
+  const [colorValue, setColorValue] = useState(null);
+
+  useEffect(() => {
+    dataBrands &&
+      dataBrands.data.map((e) =>
+        e.brandName == productById?.data.brand ? setSelectedBrandId(e.id) : null
+      );
+  }, [dataBrands]);
 
   let navigate = useNavigate();
   let { data, refetch } = useGetProductsQuery();
-  let { data: dataBrands, refetch: refetchBrands } = useGetBrandsQuery();
   let { data: dataSubCategories, refetch: refetchSubCategories } =
     useGetSubCategoriesQuery();
   let { data: dataColors, refetch: refetchColors } = useGetColorsQuery();
@@ -59,19 +64,19 @@ const ProductsEdit = () => {
     reset,
   } = useForm();
 
-  const [selectedColorId, setSelectedColorId] = useState(null);
-  const [colorValue, setColorValue] = useState(null);
+  const [randomNumber, setRandomNumber] = useState(
+    Math.floor(Math.random() * 1000000000) + 1
+  );
 
   function sendIdName(e) {
     setSelectedColorId(e.id);
     setColorValue(e.colorName);
   }
-
   useEffect(() => {
     if (productById && productById.data) {
       const product = productById.data;
       setValue("ProductName", product.productName);
-      setValue("Code", product.code);
+      setValue("Code", randomNumber);
       setValue("Description", product.description);
       setValue("Price", product.price);
       setValue("DiscountPrice", product.discountPrice || "");
@@ -79,10 +84,10 @@ const ProductsEdit = () => {
       setValue("Quantity", product.quantity || 1);
       setValue("Weight", product.weight || "");
       setValue("Size", product.size || "");
-      setValue("Color", product.color);
+      setValue("Color", null);
       setColorValue(product.color);
       setValue("SubCategoryId", product.subCategoryId);
-      setValue("Brand", product.brand);
+      // setValue("BrandId", selectedBrandId);
     }
   }, [productById]);
 
@@ -149,6 +154,8 @@ const ProductsEdit = () => {
     setImageUrl(image);
   }
   const { theme, setTheme } = useTheme();
+  // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="flex items-start">
       <form
@@ -389,7 +396,7 @@ const ProductsEdit = () => {
                 <p className="font-medium ">{t("productsEdit.23")}</p>
 
                 <div className="flex items-center gap-2">
-                  {!colorValue && (
+                  {!selectedColorId && (
                     <p className="text-sm">
                       {t("productsEdit.24")}
                       <span className="text-red-500 font-bold text-xl">*</span>
@@ -402,19 +409,32 @@ const ProductsEdit = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 lg:grid-cols-6 gap-2 mb-2">
-                {dataColors &&
-                  dataColors.data.map((e, i) => (
-                    <div
-                      key={i}
-                      onClick={() => sendIdName(e)}
-                      style={{ backgroundColor: e.colorName }}
-                      className={`w-10 h-10 rounded-full border border-[rgb(183,183,183)] cursor-pointer ${
-                        selectedColorId === e.id ? "ring-2 ring-blue-500" : ""
-                      }`}
-                    ></div>
-                  ))}
-              </div>
+              {isLoading ? (
+                <Skeleton active />
+              ) : (
+                <div
+                  className={`${
+                    dataColors ? "grid" : ""
+                  }  grid-cols-4 lg:grid-cols-6 gap-2 mb-2`}
+                >
+                  {dataColors ? (
+                    dataColors.data.map((e, i) => (
+                      <div
+                        key={i}
+                        onClick={() => sendIdName(e)}
+                        style={{ backgroundColor: e.colorName }}
+                        className={`w-10 h-10 rounded-full border border-[rgb(230,230,230)] ${
+                          selectedColorId === e.id ? "ring-2 ring-blue-500" : ""
+                        }`}
+                      ></div>
+                    ))
+                  ) : (
+                    <div className=" w-full text-center text-red-600 lg:text-xl font-medium">
+                      {t("layout.7")}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="border border-dashed border-gray-400 p-5 text-center mb-2 rounded font-semibold flex items-center justify-center flex-col">
@@ -528,6 +548,7 @@ const ProductsEdit = () => {
           </div>
         </div>
       </form>
+      {setValue("BrandId", selectedBrandId)}
     </div>
   );
 };

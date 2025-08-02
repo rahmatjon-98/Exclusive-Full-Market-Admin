@@ -1,32 +1,35 @@
 import React, { useState } from "react";
 
 import { Link } from "react-router";
-import img from "../../shared/images/Category-CellPhone (1).png";
-import { LogOut, Search, SquarePen, Trash } from "lucide-react";
+import { Search, SquarePen, Trash } from "lucide-react";
 import {
   useAddBrandMutation,
   useDeleteBrandMutation,
   useEditBrandMutation,
   useGetBrandsQuery,
-  useGetSubCategoriesQuery,
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 
 const Others = () => {
   const { t } = useTranslation();
 
-  let { data: dataBrands, refetch: refetchBrands } = useGetBrandsQuery();
-  let [addBrand] = useAddBrandMutation();
-  let [editBrand] = useEditBrandMutation();
-  let [deleteBrand] = useDeleteBrandMutation();
+  const {
+    data: dataBrands,
+    refetch: refetchBrands,
+    isLoading,
+  } = useGetBrandsQuery();
+  const [addBrand] = useAddBrandMutation();
+  const [editBrand] = useEditBrandMutation();
+  const [deleteBrand] = useDeleteBrandMutation();
 
-  let [addModal, setaddModal] = useState(false);
-  let [addBrandName, setaddBrandName] = useState("");
+  const [addModal, setaddModal] = useState(false);
+  const [addBrandName, setaddBrandName] = useState("");
 
-  let [editModal, seteditModal] = useState(false);
-  let [editBrandName, seteditBrandName] = useState("");
-  let [idx, setIdx] = useState(null);
+  const [editModal, seteditModal] = useState(false);
+  const [editBrandName, seteditBrandName] = useState("");
+  const [idx, setIdx] = useState(null);
 
   async function ADDBrandName(e) {
     e.preventDefault();
@@ -67,18 +70,24 @@ const Others = () => {
         <div className="flex justify-between items-center lg:text-xl text-xs">
           <div className="flex items-center gap-1 lg:gap-5">
             <Link to={"/others"}>
-              <button className="font-medium border-b-4 border-gray-300 py-2">
+              <button className="cursor-pointer font-medium border-b-4 border-gray-300 py-2">
                 {t("brands.1")}
               </button>
             </Link>
             <Link to={"/othersCategories"}>
-              <button className="font-medium">{t("brands.2")}</button>
+              <button className="cursor-pointer font-medium">
+                {t("brands.2")}
+              </button>
             </Link>
             <Link to={"/othersSubCategories"}>
-              <button className="font-medium">{t("brands.3")}</button>
+              <button className="cursor-pointer font-medium">
+                {t("brands.3")}
+              </button>
             </Link>
             <Link to={"/othersColors"}>
-              <button className="font-medium ">{t("brands.4")}</button>
+              <button className="cursor-pointer font-medium ">
+                {t("brands.4")}
+              </button>
             </Link>
           </div>
 
@@ -190,32 +199,43 @@ const Others = () => {
           </fieldset>
         </div>
 
-        <article className="grid lg:grid-cols-5 gap-5">
-          {dataBrands &&
-            dataBrands.data
-              .filter((e) =>
-                e.brandName.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((e, i) => (
-                <div
-                  key={i}
-                  className="flex items-start justify-between p-5 border border-gray-400 rounded"
-                >
-                  <div>
-                    <p>{e.brandName}</p>
-                  </div>
+        {isLoading ? (
+          <Skeleton active />
+        ) : (
+          <article
+            className={`${dataBrands ? "grid" : ""}  lg:grid-cols-5 gap-5`}
+          >
+            {dataBrands ? (
+              dataBrands?.data
+                .filter((e) =>
+                  e.brandName.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((e, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start justify-between p-5 border border-gray-400 rounded"
+                  >
+                    <div>
+                      <p>{e.brandName}</p>
+                    </div>
 
-                  <div className="space-x-3">
-                    <button onClick={() => openEditModal(e)}>
-                      <SquarePen size={18} color="blue" />
-                    </button>
-                    <button onClick={() => removeBrand(e.id)}>
-                      <Trash size={18} color="red" />
-                    </button>
+                    <div className="space-x-3">
+                      <button onClick={() => openEditModal(e)}>
+                        <SquarePen size={18} color="blue" />
+                      </button>
+                      <button onClick={() => removeBrand(e.id)}>
+                        <Trash size={18} color="red" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-        </article>
+                ))
+            ) : (
+              <div className="w-full text-center text-red-600 lg:text-2xl font-medium">
+                {t("layout.7")}
+              </div>
+            )}
+          </article>
+        )}
       </div>
     </div>
   );

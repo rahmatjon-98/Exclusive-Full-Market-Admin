@@ -28,19 +28,22 @@ import {
 } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
+import { Skeleton } from "antd";
 
 const ProductsAdd = () => {
   const { t } = useTranslation();
 
-  let navigate = useNavigate();
-  let { data, refetch } = useGetProductsQuery();
-  let { data: dataBrands, refetch: refetchBrands } = useGetBrandsQuery();
-  let { data: dataSubCategories, refetch: refetchSubCategories } =
+  const navigate = useNavigate();
+  const { data, refetch } = useGetProductsQuery();
+  const { data: dataBrands, refetch: refetchBrands } = useGetBrandsQuery();
+  const { data: dataSubCategories, refetch: refetchSubCategories } =
     useGetSubCategoriesQuery();
-  let { data: dataColors, refetch: refetchColors } = useGetColorsQuery();
-
-  let [addProduct] = useAddProductMutation();
-  const fileInputRef = useRef(null);
+  const {
+    data: dataColors,
+    refetch: refetchColors,
+    isLoading,
+  } = useGetColorsQuery();
+  const [addProduct] = useAddProductMutation();
 
   const {
     register,
@@ -52,6 +55,7 @@ const ProductsAdd = () => {
   const [randomNumber, setRandomNumber] = useState(
     Math.floor(Math.random() * 1000000000) + 1
   );
+
   const [selectedColorId, setSelectedColorId] = useState(3);
   const [colorValue, setColorValue] = useState(null);
   const [showImage, setshowImage] = useState(null);
@@ -94,6 +98,8 @@ const ProductsAdd = () => {
     }
   };
   const { theme, setTheme } = useTheme();
+  // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="flex items-start">
       <form
@@ -191,7 +197,9 @@ const ProductsAdd = () => {
                   <p className="py-2">{t("productsAdd.9")}</p>
                   <select
                     {...register("BrandId", { required: true })}
-                    className={`border border-[#E5E5E5] p-2  rounded w-full  ${theme == "dark" ? "bg-black" : "bg-white"}`}
+                    className={`border border-[#E5E5E5] p-2  rounded w-full  ${
+                      theme == "dark" ? "bg-black" : "bg-white"
+                    }`}
                   >
                     <option value="">{t("productsAdd.10")}</option>
                     {dataBrands &&
@@ -351,19 +359,34 @@ const ProductsAdd = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 lg:grid-cols-6 gap-2 mb-2">
-                  {dataColors &&
-                    dataColors.data.map((e, i) => (
-                      <div
-                        key={i}
-                        onClick={() => sendIdName(e)}
-                        style={{ backgroundColor: e.colorName }}
-                        className={`w-10 h-10 rounded-full border border-[rgb(230,230,230)] ${
-                          selectedColorId === e.id ? "ring-2 ring-blue-500" : ""
-                        }`}
-                      ></div>
-                    ))}
-                </div>
+                {isLoading ? (
+                  <Skeleton active />
+                ) : (
+                  <div
+                    className={`${
+                      dataColors ? "grid" : ""
+                    }  grid-cols-4 lg:grid-cols-6 gap-2 mb-2`}
+                  >
+                    {dataColors ? (
+                      dataColors.data.map((e, i) => (
+                        <div
+                          key={i}
+                          onClick={() => sendIdName(e)}
+                          style={{ backgroundColor: e.colorName }}
+                          className={`w-10 h-10 rounded-full border border-[rgb(230,230,230)] ${
+                            selectedColorId === e.id
+                              ? "ring-2 ring-blue-500"
+                              : ""
+                          }`}
+                        ></div>
+                      ))
+                    ) : (
+                      <div className=" w-full text-center text-red-600 lg:text-xl font-medium">
+                        {t("layout.7")}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -412,7 +435,7 @@ const ProductsAdd = () => {
                       placeholder={t("productsAdd.28")}
                       className="border border-[#D9E1EC] rounded p-3"
                     />
-                    <button className="border border-[#2563EB] text-[#2563EB] rounded p-2.5">
+                    <button className="cursor-pointer border border-[#2563EB] text-[#2563EB] rounded p-2.5">
                       <Check size={18} />
                     </button>
                   </div>
@@ -451,7 +474,7 @@ const ProductsAdd = () => {
                         </td>
                         <td>Healthcare_Erbology.png</td>
                         <td className="flex justify-center items-center">
-                          <button className="text-[#7E84A3] p-0 lg:p-3">
+                          <button className="cursor-pointer text-[#7E84A3] p-0 lg:p-3">
                             <Trash size={18} />
                           </button>
                         </td>

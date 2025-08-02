@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")).render(
           defaultTheme="light"
           enableSystem={false}
         >
-          <Suspense fallback="loading">
+          <Suspense fallback="loading...">
             <App />
           </Suspense>
         </ThemeProvider>

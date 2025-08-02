@@ -114,7 +114,7 @@ const Dashboard = () => {
           <div className={` lg:p-4 rounded shadow`}>
             <div className="flex justify-between items-center mb-4">
               <p className="font-semibold">{t("dashboard.18")}</p>
-              <button className="font-semibold text-sm flex items-center gap-2">
+              <button className="cursor-pointer font-semibold text-sm flex items-center gap-2">
                 {t("dashboard.19")} <ArrowRight size={20} />
               </button>
             </div>

@@ -40,7 +40,8 @@
     "3": "Dashboard",
     "4": "Orders",
     "5": "Products",
-    "6": "Other"
+    "6": "Other",
+    "7": "Please check your internet connection."
   },
 
   "orders": {
