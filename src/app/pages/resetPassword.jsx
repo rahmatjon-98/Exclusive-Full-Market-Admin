@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Eye, EyeClosed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import img from "../../shared/images/Group 1116606595 (1).svg";
+import { useTranslation } from "react-i18next";
 
 const ResetPassword = () => {
-  const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
+  const navigate = useNavigate();
   const [token, setToken] = useState(null);
 
   useEffect(() => {
@@ -34,17 +36,17 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex w-full h-screen">
-      <div className="w-1/2 h-full bg-[#1C2536] flex items-center justify-center">
+    <div className="lg:flex w-full h-[130vh] lg:h-[120vh] fixed -top-10 -left-0">
+      <div className="lg:pt-0 pt-10 w-full lg:w-1/2 h-1/5 lg:h-full bg-[#1C2536] flex items-center justify-center">
         <div className="w-full px-10">
           <h1 className="text-2xl text-white font-medium">
-            Welcome to admin panel
+            {t("resetPassword.welcome")}
           </h1>
           <img className="w-3/5" src={img} alt="admin visual" />
         </div>
       </div>
 
-      <div className="w-1/2 h-full flex items-center justify-center">
+      <div className="w-full lg:w-1/2 h-2/3 lg:h-full flex lg:pt-0 pt-50 lg:items-center justify-center bg-white">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 w-3/5 relative"
@@ -60,13 +62,13 @@ const ResetPassword = () => {
             <input
               className="p-2.5 outline-none w-9/10"
               type={btnShowPas1 ? "text" : "password"}
-              placeholder="Password"
+              placeholder={t("resetPassword.passwordPlaceholder")}
               autoComplete="new-password"
               {...register("adminPassword", {
-                required: "Password is required",
+                required: t("resetPassword.passwordRequired"),
                 minLength: {
                   value: 4,
-                  message: "Minimum 4 characters",
+                  message: t("resetPassword.passwordMinLength"),
                 },
               })}
             />
@@ -88,16 +90,16 @@ const ResetPassword = () => {
             <input
               className="p-2.5 outline-none w-9/10"
               type={btnShowPas2 ? "text" : "password"}
-              placeholder="Confirm password"
+              placeholder={t("resetPassword.confirmPasswordPlaceholder")}
               autoComplete="new-password"
               {...register("adminPasswordConfirm", {
-                required: "Please confirm your password",
+                required: t("resetPassword.confirmPasswordRequired"),
                 minLength: {
                   value: 4,
-                  message: "Minimum 4 characters",
+                  message: t("resetPassword.passwordMinLength"),
                 },
                 validate: (value) =>
-                  value === password || "Passwords do not match",
+                  value === password || t("resetPassword.passwordsNotMatch"),
               })}
             />
             <button
@@ -118,7 +120,7 @@ const ResetPassword = () => {
             type="submit"
             className="text-base bg-[#2563EB] text-white py-2.5 rounded font-medium cursor-pointer"
           >
-            Send reset link
+            {t("resetPassword.submitButton")}
           </button>
         </form>
       </div>
