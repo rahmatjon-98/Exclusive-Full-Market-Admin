@@ -42,9 +42,9 @@ const Layout = () => {
     setAccount((e) => !e);
   }
   async function logOut() {
-    localStorage.removeItem("admin_token");
-    btnAccount();
+    setAccount(false);
     navigate("/login");
+    localStorage.removeItem("admin_token");
   }
 
   let [ImageFull, setImageFull] = useState(false);
@@ -117,18 +117,17 @@ const Layout = () => {
             <button>
               <ChevronDown />
             </button>
-
-            {account && (
-              <div
-                style={{ backdropFilter: "blur(6px)" }}
-                className="absolute z-5 top-13 right-0 flex flex-col gap-5 p-5 rounded  text-white bg-[#000000B8]"
-              >
-                <button onClick={logOut} className="flex items-center gap-5">
-                  <LogOut /> {t("layout.2")}
-                </button>
-              </div>
-            )}
           </div>
+          {account && (
+            <div
+              style={{ backdropFilter: "blur(6px)" }}
+              className="absolute z-5 top-13 right-0 flex flex-col gap-5 p-5 rounded  text-white bg-[#000000B8]"
+            >
+              <button onClick={logOut} className="flex items-center gap-5">
+                <LogOut /> {t("layout.2")}
+              </button>
+            </div>
+          )}
         </div>
       </header>
 

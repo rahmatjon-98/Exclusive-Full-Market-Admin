@@ -12,7 +12,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <ThemeProvider attribute="class">
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="light"
+          enableSystem={false}
+        >
           <Suspense fallback="loading">
             <App />
           </Suspense>

@@ -70,10 +70,10 @@ const Login = () => {
           </label>
 
           <input
-            className="border border-[#E5E5E5] rounded w-full p-2.5 outline-none"
+            className={`border border-[#E5E5E5] rounded w-full p-2.5 outline-none ${theme == "light" ? "text-black" : "text-white"}`}
             type="text"
             placeholder={t("login.usernamePlaceholder")}
-            autoComplete="email"
+            // autoComplete="email"
             {...register("adminEmail", {
               required: true,
               maxLength: 30,
@@ -83,12 +83,12 @@ const Login = () => {
             <p className="text-red-500 text-sm">{t("login.usernameError")}</p>
           )}
 
-          <div className="border border-[#E5E5E5] rounded w-full relative">
+          <div className={`border border-[#E5E5E5] rounded w-full relative ${theme == "light" ? "text-black" : "text-white"}`}>
             <input
               className="p-2.5 outline-none w-9/10"
               type={btnShow ? "text" : "password"}
               placeholder={t("login.passwordPlaceholder")}
-              autoComplete="current-password"
+              // autoComplete="current-password"
               {...register("adminPassword", {
                 required: true,
                 minLength: 4,
