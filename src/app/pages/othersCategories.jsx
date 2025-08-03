@@ -192,7 +192,7 @@ const OthersCategories = () => {
                 defaultValue={editCategoryName}
               />
 
-              <div className="flex gap-3 justify-between">
+              <div className="flex gap-3 justify-between text-xs">
                 <button
                   onClick={() => seteditModal(false)}
                   className="border border-[#E2E8F0] text-blue-600 px-8 py-2 rounded"
@@ -201,7 +201,7 @@ const OthersCategories = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-2 lg:px-8 py-2 rounded text-xs lg:text-xl"
+                  className="bg-blue-600 text-white px-2 lg:px-8 py-2 rounded "
                 >
                   {t("categories.save")}
                 </button>
