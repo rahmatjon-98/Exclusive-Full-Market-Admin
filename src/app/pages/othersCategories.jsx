@@ -273,4 +273,4 @@ const OthersCategories = () => {
   );
 };
 
-export default OthersCategories;
+export default React.memo(OthersCategories);

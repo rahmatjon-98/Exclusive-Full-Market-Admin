@@ -241,4 +241,4 @@ const Others = () => {
   );
 };
 
-export default Others;
+export default React.memo(Others);

@@ -1,33 +1,34 @@
-import "./App.css";
 import { Route, Routes } from "react-router";
-import Layout from "./pages/Layout";
-import Dashboard from "./pages/dashboard";
-import Login from "./pages/login";
-import ForgotPassword from "./pages/forgotPassword";
-import ResetPassword from "./pages/resetPassword";
-import Others from "./pages/others";
-import Orders from "./pages/orders";
-import OthersCategories from "./pages/othersCategories";
-import Products from "./pages/products";
-import ProductsEdit from "./pages/productsEdit";
-import OthersSubCategories from "./pages/OthersSubCategories";
-import OthersColors from "./pages/othersColors";
-import ProductsAdd from "./pages/productsAdd";
-// import {
-//   Dashboard,
-//   ForgotPassword,
-//   Layout,
-//   Login,
-//   Orders,
-//   Others,
-//   OthersCategories,
-//   OthersColor,
-//   OthersSubCategories,
-//   Products,
-//   ProductsAdd,
-//   ProductsEdit,
-//   ResetPassword,
-// } from "./pages/lazy";
+import "./App.css";
+// import { Route, Routes } from "react-router";
+// import Layout from "./pages/Layout";
+// import Dashboard from "./pages/dashboard";
+// import Login from "./pages/login";
+// import ForgotPassword from "./pages/forgotPassword";
+// import ResetPassword from "./pages/resetPassword";
+// import Others from "./pages/others";
+// import Orders from "./pages/orders";
+// import OthersCategories from "./pages/othersCategories";
+// import Products from "./pages/products";
+// import ProductsEdit from "./pages/productsEdit";
+// import OthersSubCategories from "./pages/OthersSubCategories";
+// import OthersColors from "./pages/othersColors";
+// import ProductsAdd from "./pages/productsAdd";
+import {
+  Dashboard,
+  ForgotPassword,
+  Layout,
+  Login,
+  Orders,
+  Others,
+  OthersCategories,
+  OthersColors,
+  OthersSubCategories,
+  Products,
+  ProductsAdd,
+  ProductsEdit,
+  ResetPassword,
+} from "./pages/lazy";
 
 function App() {
   return (

@@ -72,7 +72,7 @@ const Layout = () => {
         </div>
       )}
 
-      <header className="bg-[#1C2536] flex items-center justify-between text-white py-2.5 px-5 w-full">
+      <header className="bg-[#1C2536] flex items-center justify-between text-white py-2 px-5 w-full">
         <div className="flex items-center gap-3">
           <button onClick={() => setdashboard((e) => !e)}>
             <AlignJustify />
@@ -166,7 +166,7 @@ const Layout = () => {
         <div
           className={`${
             dashboard ? "lg:w-1/20 w-[16%]" : "lg:w-1/5"
-          } bg-[#1C2536] pt-1 h-[93.4vh] lg:h-[90.2vh]`}
+          } bg-[#1C2536] pt-1 h-[93.4vh] lg:h-[89.7vh]`}
         >
           <div className="p-2.5 flex flex-col gap-2.5">
             <div

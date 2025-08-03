@@ -553,4 +553,4 @@ const ProductsEdit = () => {
   );
 };
 
-export default ProductsEdit;
+export default React.memo(ProductsEdit);

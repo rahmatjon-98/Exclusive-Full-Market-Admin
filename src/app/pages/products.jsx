@@ -87,95 +87,92 @@ const Products = () => {
             </div>
           </div>
 
-          <table className="w-full lg:text-sm text-[10px]">
-            <thead className="text-gray-500 border-b-2 border-[#E6E9F4] ">
-              <tr>
-                <th className="w-80 py-2">{t("products.10")}</th>
-                <th className="hidden lg:block">{t("products.11")}</th>
-                <th className="px-1">{t("products.12")}</th>
-                <th className="hidden lg:block">{t("products.13")}</th>
-                <th className="px-1">{t("products.15")}</th>
-                <th className="px-1">{t("products.16")}</th>
-                <th className="text-center">{t("products.17")}</th>
-              </tr>
-            </thead>
+          <div className="w-full lg:text-sm text-[10px] ">
+            <div className="grid py-2 grid-cols-5 lg:grid-cols-7 text-center text-gray-500 border-b-2 border-[#E6E9F4] font-medium px-2">
+              <div className="">{t("products.10")}</div>
+              <div className="hidden lg:block">{t("products.11")}</div>
+              <div className="">{t("products.12")}</div>
+              <div className="hidden lg:block">{t("products.13")}</div>
+              <div className="">{t("products.15")}</div>
+              <div className="">{t("products.16")}</div>
+              <div className="text-center">{t("products.17")}</div>
+            </div>
+
             {isLoading ? (
               <div className="py-5">
                 <Skeleton active avatar paragraph={{ rows: 0 }} />
                 <Skeleton active avatar paragraph={{ rows: 0 }} />
                 <Skeleton active avatar paragraph={{ rows: 0 }} />
               </div>
-            ) : (
-              <tbody>
-                {data ? (
-                  data.data.products
-                    .filter((e) => e.hasDiscount.toString().includes(status))
-                    .filter((e) =>
-                      e.productName.toLowerCase().includes(search.toLowerCase())
-                    )
-                    .map((e) => (
-                      <tr
-                        key={e.id}
-                        className=" border-b border-[#E6E9F4] text-center"
-                      >
-                        <td className="w-10">
-                          <div className="lg:flex items-center gap-1 lg:gap-3 p-2">
-                            <img
-                              className="lg:w-15 w-10 lg:h-15 h-10 rounded object-contain"
-                              src={`https://store-api.softclub.tj/images/${e.image}`}
-                              alt=""
-                            />
-                            <p className="">{e.productName}</p>
-                          </div>
-                        </td>
-                        <td className="hidden lg:inline ">
-                          <span
-                            className={`font-semibold ${
-                              e.hasDiscount ? "text-green-600" : "text-red-600"
-                            }`}
-                          >
-                            ${e.discountPrice}
-                          </span>
-                        </td>
-                        <td className="p-2">{e.categoryName}</td>
-                        <td className="hidden lg:block ">
-                          <div
-                            style={{ backgroundColor: e.color }}
-                            className="w-10 h-10 rounded-full border border-gray-300 mt-5"
-                          ></div>
-                        </td>
-                        <td>${e.price}</td>
-                        <td>{e.quantity}</td>
-                        <td>
-                          <div className="flex items-center w-full gap-3 justify-center">
-                            <Link to={`/productsEdit/${e.id}`}>
-                              <button className="cursor-pointer border border-[#E2E8F0] text-blue-500 p-2 rounded ">
-                                <SquarePen className="lg:w-5 lg:h-5 w-3 h-3" />
-                              </button>
-                            </Link>
+            ) : data ? (
+              data.data.products
+                .filter((e) => e.hasDiscount.toString().includes(status))
+                .filter((e) =>
+                  e.productName.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((e) => (
+                  <div
+                    key={e.id}
+                    className="grid grid-cols-5 lg:grid-cols-7 items-center text-center border-b border-[#E6E9F4] px-2 py-2"
+                  >
+                    <div className=" flex items-center gap-1 lg:gap-3">
+                      <img
+                        className="lg:w-15 w-10 lg:h-15 h-10 rounded object-contain"
+                        src={`https://store-api.softclub.tj/images/${e.image}`}
+                        alt=""
+                      />
+                      <p>{e.productName}</p>
+                    </div>
 
-                            <button
-                              onClick={() => removeProduct(e.id)}
-                              className="border border-[#E2E8F0] text-red-500 p-2 rounded"
-                            >
-                              <Trash className="lg:w-5 lg:h-5 w-3 h-3" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                ) : (
-                  <div className="absolute mt-20 left-[35%] text-center text-red-600 lg:text-2xl font-medium">
-                    {t("layout.7")}
+                    <div className="hidden lg:block font-semibold">
+                      <span
+                        className={`${
+                          e.hasDiscount ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        ${e.discountPrice}
+                      </span>
+                    </div>
+
+                    <div className="">{e.categoryName}</div>
+
+                    <div className="hidden lg:block">
+                      <div
+                        style={{ backgroundColor: e.color }}
+                        className="w-10 h-10 rounded-full border border-gray-300 mt-5 mx-auto"
+                      ></div>
+                    </div>
+
+                    <div className="">${e.price}</div>
+
+                    <div className="">{e.quantity}</div>
+
+                    <div className="flex items-center justify-center gap-3">
+                      <Link to={`/productsEdit/${e.id}`}>
+                        <button className="cursor-pointer border border-[#E2E8F0] text-blue-500 p-2 rounded">
+                          <SquarePen className="lg:w-5 lg:h-5 w-3 h-3" />
+                        </button>
+                      </Link>
+
+                      <button
+                        onClick={() => removeProduct(e.id)}
+                        className="border border-[#E2E8F0] text-red-500 p-2 rounded"
+                      >
+                        <Trash className="lg:w-5 lg:h-5 w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
-                )}
-              </tbody>
+                ))
+            ) : (
+              <div className="mt-20 text-center text-red-600 lg:text-2xl font-medium">
+                {t("layout.7")}
+              </div>
             )}
-          </table>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Products;
+export default React.memo(Products);

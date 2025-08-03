@@ -248,4 +248,4 @@ const othersColors = () => {
   );
 };
 
-export default othersColors;
+export default React.memo(othersColors);
