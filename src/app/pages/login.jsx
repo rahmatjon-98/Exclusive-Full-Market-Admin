@@ -3,26 +3,20 @@ import { Link, useNavigate } from "react-router";
 import { Eye, EyeClosed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import img from "../../shared/images/Group 1116606595 (1).svg";
-import { useGetUserDataQuery, useLoginMutation } from "../../entities/allApi";
+import { useLoginMutation } from "../../entities/allApi";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import { Skeleton } from "antd";
+import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const navigate = useNavigate();
-  const [btnShow, setbtnShow] = useState(false);
-  // const { data, isLoading } = useGetUserDataQuery();
+  let [login] = useLoginMutation();
+  // const { data, isLoading } = useGetUserRoleQuery();
 
-  const token = localStorage.getItem("admin_token");
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  const [btnShow, setbtnShow] = useState(false);
 
   const {
     register,
@@ -30,23 +24,40 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  let [login] = useLoginMutation();
-
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     try {
-      const response = await login({
-        userName: data.adminEmail,
-        password: data.adminPassword,
-      }).unwrap();
+      const userData = {
+        userName: formData.adminName,
+        password: formData.adminPassword,
+      };
 
-      localStorage.setItem("admin_token", response.data);
-      navigate("/");
+      const response = await login(userData).unwrap();
+
+      const token = response.data;
+      localStorage.setItem("admin_token", token);
+
+      const roleResponse = await axios.get(
+        "https://store-api.softclub.tj/UserProfile/get-user-roles",
+        {
+          headers: {
+            Accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const isAdmin =
+        roleResponse.data?.data.some((e) => e.name === "Admin") || false;
+
+      if (isAdmin) navigate("/");
     } catch (error) {
       console.error(error);
       alert(t("login.error"));
     }
   };
+
   // if (isLoading) return <Skeleton active />;
+
   return (
     <div className="lg:flex w-full h-[130vh] lg:h-[120vh] fixed -top-10 -left-0">
       <div className="lg:pt-0 pt-10 w-full lg:w-1/2 h-1/5 lg:h-full bg-[#1C2536] flex items-center justify-center">
@@ -77,13 +88,13 @@ const Login = () => {
             }`}
             type="text"
             placeholder={t("login.usernamePlaceholder")}
-            // autoComplete="email"
-            {...register("adminEmail", {
+            autoComplete="name"
+            {...register("adminName", {
               required: true,
               maxLength: 30,
             })}
           />
-          {errors.adminEmail && (
+          {errors.adminName && (
             <p className="text-red-500 text-sm">{t("login.usernameError")}</p>
           )}
 
@@ -96,7 +107,7 @@ const Login = () => {
               className="p-2.5 outline-none w-9/10"
               type={btnShow ? "text" : "password"}
               placeholder={t("login.passwordPlaceholder")}
-              // autoComplete="current-password"
+              autoComplete="current-password"
               {...register("adminPassword", {
                 required: true,
                 minLength: 4,

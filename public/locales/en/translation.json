@@ -211,7 +211,7 @@
     "passwordError": "Minimum 4 characters",
     "forgotPassword": "Forgot password?",
     "submitButton": "Log in",
-    "error": "Login error. Please try again."
+    "error": "Login failed. Please check your internet connection, username or password. Make sure you have administrator access."
   },
   "forgotPassword": {
     "welcome": "Welcome to admin panel",

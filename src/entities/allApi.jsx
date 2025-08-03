@@ -205,12 +205,18 @@ export let allApi = createApi({
     getUserData: builder.query({
       query: (id) => `UserProfile/get-user-profile-by-id?id=${id}`,
     }),
+
+    //User role
+    // getUserRole: builder.query({
+    // query: () => "UserProfile/get-user-roles",
+    // }),
   }),
 });
 
 export let {
   useGetUserDataQuery,
   useLoginMutation,
+  // useGetUserRoleQuery,
 
   useGetProductsQuery,
   useDeleteProductMutation,
@@ -242,3 +248,18 @@ export let {
   useEditColorMutation,
   useDeleteColorMutation,
 } = allApi;
+
+// {
+//   "data": [
+//     {
+//       "id": "34808f49-52e9-4fb7-9001-cf05800d608d",
+//       "name": "Admin"
+//     },
+//     {
+//       "id": "82f1e62b-03ca-4d0e-a61a-e5398d8a67e1",
+//       "name": "User"
+//     }
+//   ],
+//   "errors": [],
+//   "statusCode": 200
+// }
